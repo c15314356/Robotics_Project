@@ -43,7 +43,7 @@ main()
     }
     for(int i=0;i<10;i++)
     {
-        printf("\nhi4%d",array[i]);
+        printf("\nhi6%d",array[i]);
     }
     
     
