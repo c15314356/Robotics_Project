@@ -1,5 +1,12 @@
 /*
 This will Be the Main Program for the project
+TODO------------------------------------
+implement ability to write to file
+implement stop when double line hit x2
+implement go back sq when double line hit and turn
+implement x and y coords in order to go back to start
+implement ability to scan for an object
+-------------------------------------------
 c15314356
 */
 #pragma config(Sensor, S3,     lightSensor,    sensorEV3_Color)
@@ -34,6 +41,7 @@ task main()
     int direction=1;
     int doubleline=0;
     int sense=0;
+    int blacksq=0;
     
     //turn right go forward until hit double line go back half a square then turn left (You are at bottom left sq now
     while(doubleline!=2)
@@ -45,18 +53,26 @@ task main()
             {
                 //move forward
                 Forward();
-                
+                //if less 45 = black
                 if(SensorValue(lightSensor)<45)
                 {
                     sense=1;
+                    if(time1[T1]<200)
+                    {
+                        blacksq++;
+                    }
                 }
-        
+
+                //if greater 45 = white
                 if(SensorValue(lightSensor)>45&&sense==1)
                 {
+                    //starts timer
+                    ClearTimer(T1);
+                    //adds one to count of lines
                     Count(count);
                     sense=0;
                 }
-                displayBigTextLine(4,"crossed %d lines",count);
+                displayBigTextLine(4,"crossed %d lines number of black= %d",count,blacksq);
             }
             
             //Switches to next line
@@ -76,14 +92,21 @@ task main()
                 if(SensorValue(lightSensor)<45)
                 {
                     sense=1;
+                    if(time1[T1]<200)
+                    {
+                        blacksq++;
+                    }
                 }
         
                 if(SensorValue(lightSensor)>45&&sense==1)
                 {
+                    //starts timer
+                    ClearTimer(T1);
+                    //adds one to count of lines
                     Count(count);
                     sense=0;
                 }
-                displayBigTextLine(4,"crossed %d lines",count);
+                displayBigTextLine(4,"crossed %d lines number of black= %d",count,blacksq);
             }
             
             //Switches to next line
