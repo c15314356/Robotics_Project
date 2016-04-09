@@ -15,16 +15,18 @@ c15314356
 void LeftTurn(void);
 //Turn right 90 degrees
 void RightTurn(void);
-//Go Forward
+//Go forward
 void Forward(void);
 //Counts number of squares passed
 int Count(int count);
 //Reset count
 int ResetCount(int count);
-//Move Forward a Square
+//Move forward a Square
 void ForwardSQ(void);
-//Move next line
+//Move next line on left
 void NextLineLeft(void);
+//Move next line on right
+void NextLineRight(void);
 
 task main()
 {
@@ -106,7 +108,7 @@ void LeftTurn(void)
     //Wait for program to stop
 	waitUntilMotorStop(motorB);
 	waitUntilMotorStop(motorC);
-}
+}//end LeftTurn
 
 //Turn right 90 degrees
 void RightTurn(void)
@@ -120,7 +122,7 @@ void RightTurn(void)
     //Wait for program to stop
     waitUntilMotorStop(motorB);
     waitUntilMotorStop(motorC);
-}
+}//end RightTurn
 
 //Go Forward
 void Forward(void)
@@ -128,21 +130,21 @@ void Forward(void)
     motor(motorB)=SPEED;
     motor(motorC)=SPEED;
     wait1Msec(1);
-}
+}//end Forward()
 
 //Counts number of squares passed
 void Count(int count)
 {
     count++;
     return(count);
-}
+}// end Count()
 
 //resets the number of count
 int ResetCount(int count)
 {
     count=0;
     return(count);
-}
+}//end ResetCount()
 
 //Move Forward a Square
 void ForwardSQ(void)
@@ -154,7 +156,7 @@ void ForwardSQ(void)
 	setMotorTarget(motorC,180,50);
 	waitUntilMotorStop(motorB);
 	waitUntilMotorStop(motorC);
-}
+}//end ForwardSQ()
 
 //Move next line on left
 void NextLineLeft(int direction)
@@ -165,7 +167,7 @@ void NextLineLeft(int direction)
     LeftTurn();
     direction=2;
     return(direction);
-}
+}//end NextLine Left()
 
 //Move next line on right
 void NextLineRight(int direction)
@@ -176,5 +178,5 @@ void NextLineRight(int direction)
     RightTurn();
     direction=1;
     return(direction);
-}
+}//end NextLineRight ()
 
