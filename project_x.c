@@ -98,7 +98,7 @@ task main()
                     }
                 }
 
-                if(SensorValue(S1)>45&&sense==1)
+                if(SensorValue(S3)>45&&sense==1)
                 {
                     //starts timer
                     clearTimer(T1);
