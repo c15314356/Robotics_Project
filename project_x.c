@@ -31,9 +31,9 @@ int ResetCount(int count);
 //Move forward a Square
 void ForwardSQ(void);
 //Move next line on left
-void NextLineLeft(void);
+int NextLineLeft(int direction);
 //Move next line on right
-void NextLineRight(void);
+int NextLineRight(int direction);
 
 task main()
 {
@@ -42,7 +42,7 @@ task main()
     int doubleline=0;
     int sense=0;
     int blacksq=0;
-    
+
     //turn right go forward until hit double line go back half a square then turn left (You are at bottom left sq now
     while(doubleline!=2)
     {
@@ -54,7 +54,7 @@ task main()
                 //move forward
                 Forward();
                 //if less 45 = black
-                if(SensorValue(lightSensor)<45)
+                if(SensorValue(S3)<45)
                 {
                     sense=1;
                     if(time1[T1]<200)
@@ -64,23 +64,23 @@ task main()
                 }
 
                 //if greater 45 = white
-                if(SensorValue(lightSensor)>45&&sense==1)
+                if(SensorValue(S3)>45&&sense==1)
                 {
                     //starts timer
-                    ClearTimer(T1);
+                    clearTimer(T1);
                     //adds one to count of lines
                     Count(count);
                     sense=0;
                 }
                 displayBigTextLine(4,"crossed %d lines number of black= %d",count,blacksq);
             }
-            
+
             //Switches to next line
             direction=NextLineLeft(direction);
             //Resets count
             count=ResetCount(count);
         }
-        
+
         //traverse left and count lines
         if(direction==2)
         {
@@ -88,8 +88,8 @@ task main()
             {
                 //move forward
                 Forward();
-                
-                if(SensorValue(lightSensor)<45)
+
+                if(SensorValue(S3)<45)
                 {
                     sense=1;
                     if(time1[T1]<200)
@@ -97,25 +97,25 @@ task main()
                         blacksq++;
                     }
                 }
-        
-                if(SensorValue(lightSensor)>45&&sense==1)
+
+                if(SensorValue(S1)>45&&sense==1)
                 {
                     //starts timer
-                    ClearTimer(T1);
+                    clearTimer(T1);
                     //adds one to count of lines
                     Count(count);
                     sense=0;
                 }
                 displayBigTextLine(4,"crossed %d lines number of black= %d",count,blacksq);
             }
-            
+
             //Switches to next line
             direction=NextLineRight(direction);
             //Resets count
             count=ResetCount(count);
         }
     }
-    
+
 }//end main()
 
 
@@ -156,7 +156,7 @@ void Forward(void)
 }//end Forward()
 
 //Counts number of squares passed
-void Count(int count)
+int Count(int count)
 {
     count++;
     return(count);
@@ -182,7 +182,7 @@ void ForwardSQ(void)
 }//end ForwardSQ()
 
 //Move next line on left
-void NextLineLeft(int direction)
+int NextLineLeft(int direction)
 {
     ForwardSQ();
     LeftTurn();
@@ -193,7 +193,7 @@ void NextLineLeft(int direction)
 }//end NextLine Left()
 
 //Move next line on right
-void NextLineRight(int direction)
+int NextLineRight(int direction)
 {
     ForwardSQ();
     RightTurn();
@@ -202,4 +202,3 @@ void NextLineRight(int direction)
     direction=1;
     return(direction);
 }//end NextLineRight ()
-
