@@ -72,7 +72,7 @@ task main()
                     Count(count);
                     sense=0;
                 }
-                displayBigTextLine(4,"crossed %d lines number of black= %d",count,blacksq);
+                displayBigTextLine(4,"crossed %d lines",count);
             }
 
             //Switches to next line
@@ -106,7 +106,7 @@ task main()
                     Count(count);
                     sense=0;
                 }
-                displayBigTextLine(4,"crossed %d lines number of black= %d",count,blacksq);
+                displayBigTextLine(4,"crossed %d lines",count);
             }
 
             //Switches to next line
