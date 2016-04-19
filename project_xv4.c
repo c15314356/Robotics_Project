@@ -31,23 +31,21 @@ void LeftTurn(void);
 void RightTurn(void);
 //Go forward
 void Forward(void);
-//Counts number of squares passed
-int Count(int count);
 //Reset count
 int ResetCount(int count);
 //Move forward a Square
 void ForwardSQ(void);
 //Move next line on left
-void NextLineLeft(void);
+int NextLineLeft(int direction);
 //Move next line on right
-void NextLineRight(void);
+int NextLineRight(int direction);
 
 task main()
 {
     int count=0;
     int direction=1;
     int end=0;
-    
+
     //turn right go forward until hit double line go back half a square then turn left (You are at bottom left sq now
     while(end!=6)
     {
@@ -57,7 +55,7 @@ task main()
             end++;
             while(count<8)
             {
-                if(SensorValue(lightSensor)<45)
+                if(SensorValue(S3)<45)
                 {
                     blacksq++;
                     //store position to array
@@ -67,12 +65,12 @@ task main()
                 count++;
                 total++;
                 displayBigTextLine(4,"Count:%d Black:%d Total:%d",count,blacksq,total);
-                
+
                 //move forward one square
                 Forward();
                 pos2++;
             }
-            
+
             //Switches to next line
             if(end!=6)
             {
@@ -83,13 +81,13 @@ task main()
                 pos1++;
             }
         }
-        
+
         if(direction==2)
         {
             end++;
             while(count<8)
             {
-                if(SensorValue(lightSensor)<45)
+                if(SensorValue(S1)<45)
                 {
                     blacksq++;
                     //store position to array
@@ -99,12 +97,12 @@ task main()
                 count++;
                 total++;
                 displayBigTextLine(4,"Count:%d Black:%d Total:%d",count,blacksq,total);
-                
+
                 //move forward one square
                 Forward();
                 pos2++;
             }
-            
+
             //Switches to next line
             if(end!=6)
             {
@@ -154,15 +152,8 @@ void Forward(void)
 {
     motor(motorB)=SPEED;
     motor(motorC)=SPEED;
-    wait1Msec(1100);+
+    wait1Msec(1100);
 }//end Forward()
-
-//Counts number of squares passed
-void Count(int count)
-{
-    count++;
-    return(count);
-}// end Count()
 
 //resets the number of count
 int ResetCount(int count)
@@ -184,9 +175,9 @@ void ForwardSQ(void)//<--------------------------------------------------change 
 }//end ForwardSQ()
 
 //Move next line on left
-void NextLineLeft(int direction)
+int NextLineLeft(int direction)
 {
-    if(SensorValue(lightSensor)<45)
+    if(SensorValue(S1)<45)
     {
         blacksq++;
         //store position to array
@@ -203,16 +194,15 @@ void NextLineLeft(int direction)
 }//end NextLine Left()
 
 //Move next line on right
-void NextLineRight(int direction)
+int NextLineRight(int direction)
 {
-    if(SensorValue(lightSensor)<45)
+    if(SensorValue(S1)<45)
     {
         blacksq++;
         //store position to array
         grid[pos1][pos2]=1;
     }
     total++;
-    displayBigTextLine(4,"Count:%d Black:%d Total:%d",count,blacksq,total);
     ForwardSQ();
     RightTurn();
     ForwardSQ();
@@ -220,4 +210,3 @@ void NextLineRight(int direction)
     direction=1;
     return(direction);
 }//end NextLineRight ()
-
