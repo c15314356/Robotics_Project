@@ -2,7 +2,6 @@
 This will Be the Main Program for the project
 TODO------------------------------------
 implement ability to write to file
-implement stop when double line hit x2
 implement go back sq when double line hit and turn
 implement x and y coords in order to go back to start
 implement ability to scan for an object
@@ -15,8 +14,16 @@ c15314356
 #pragma config(Motor,  motorB,          Right,         tmotorEV3_Large, PIDControl, driveRight, encoder)
 #pragma config(Motor,  motorC,          Left,          tmotorEV3_Large, PIDControl, driveLeft, encoder)
 
-#define TURN 190
+#define TURN 178
 #define SPEED 30
+#define ROW 7
+#define COL 9
+
+//global variables
+int blacksq=0;
+int total=0;
+int pos1=0,pos2=0;
+int grid[ROW][COL];//<--------------------- change all to strings and also change all intial values to 0
 
 //Turn left 90 degrees
 void LeftTurn(void);
@@ -39,23 +46,22 @@ task main()
 {
     int count=0;
     int direction=1;
-    int doubleline=0;
-    int sense=0;
-    int blacksq=0;
-    int total=0;
+    int end=0;
     
     //turn right go forward until hit double line go back half a square then turn left (You are at bottom left sq now
-    while(doubleline!=2)
+    while(end!=6)
     {
         //traverse right and count lines
         if(direction==1)
         {
+            end++;
             while(count<8)
             {
                 if(SensorValue(lightSensor)<45)
                 {
                     blacksq++;
-                    //store position to array*
+                    //store position to array
+                    grid[pos1][pos2]=1;
                 }
                 //increment counters
                 count++;
@@ -64,22 +70,30 @@ task main()
                 
                 //move forward one square
                 Forward();
+                pos2++;
             }
             
             //Switches to next line
-            direction=NextLineLeft(direction);
-            //Resets count
-            count=ResetCount(count);
+            if(end!=6)
+            {
+                direction=NextLineLeft(direction);
+                //Resets count
+                count=ResetCount(count);
+                pos2=0;
+                pos1++;
+            }
         }
         
         if(direction==2)
         {
+            end++;
             while(count<8)
             {
                 if(SensorValue(lightSensor)<45)
                 {
                     blacksq++;
-                    //store position to array*
+                    //store position to array
+                    grid[pos1][pos2]=1;
                 }
                 //increment counters
                 count++;
@@ -88,14 +102,22 @@ task main()
                 
                 //move forward one square
                 Forward();
+                pos2++;
             }
             
             //Switches to next line
-            direction=NextLineRight(direction);
-            //Resets count
-            count=ResetCount(count);
-        }
-    }
+            if(end!=6)
+            {
+                //Switches to next line
+                direction=NextLineRight(direction);
+                //Resets count
+                count=ResetCount(count);
+                pos2=0;
+                pos1++;
+            }
+        }//end if()
+        //go back 7 suares and take away distance from bottom col from start from 7 and go to start
+    }//end while()
 }//end main()
 
 
@@ -132,7 +154,7 @@ void Forward(void)
 {
     motor(motorB)=SPEED;
     motor(motorC)=SPEED;
-    wait1Msec(1100);
+    wait1Msec(1100);+
 }//end Forward()
 
 //Counts number of squares passed
@@ -150,7 +172,7 @@ int ResetCount(int count)
 }//end ResetCount()
 
 //Move Forward a Square
-void ForwardSQ(void)
+void ForwardSQ(void)//<--------------------------------------------------change distance forward
 {
 	//Move Forward a Square
 	nMotorEncoder[motorB]=0;
@@ -164,6 +186,14 @@ void ForwardSQ(void)
 //Move next line on left
 void NextLineLeft(int direction)
 {
+    if(SensorValue(lightSensor)<45)
+    {
+        blacksq++;
+        //store position to array
+        grid[pos1][pos2]=1;
+    }
+    //increment total
+    total++;
     ForwardSQ();
     LeftTurn();
     ForwardSQ();
@@ -175,6 +205,14 @@ void NextLineLeft(int direction)
 //Move next line on right
 void NextLineRight(int direction)
 {
+    if(SensorValue(lightSensor)<45)
+    {
+        blacksq++;
+        //store position to array
+        grid[pos1][pos2]=1;
+    }
+    total++;
+    displayBigTextLine(4,"Count:%d Black:%d Total:%d",count,blacksq,total);
     ForwardSQ();
     RightTurn();
     ForwardSQ();
