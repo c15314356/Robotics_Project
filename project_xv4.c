@@ -65,7 +65,6 @@ task main()
                 count++;
                 total++;
                 displayBigTextLine(4,"Count:%d Black:%d Total:%d",count,blacksq,total);
-
                 //move forward one square
                 Forward();
                 pos2++;
@@ -81,7 +80,6 @@ task main()
                 pos1++;
             }
         }
-
         if(direction==2)
         {
             end++;
@@ -97,12 +95,10 @@ task main()
                 count++;
                 total++;
                 displayBigTextLine(4,"Count:%d Black:%d Total:%d",count,blacksq,total);
-
                 //move forward one square
                 Forward();
                 pos2++;
             }
-
             //Switches to next line
             if(end!=6)
             {
