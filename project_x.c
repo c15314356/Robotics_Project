@@ -57,7 +57,7 @@ task main()
                 if(SensorValue(S3)<45)
                 {
                     sense=1;
-                    if(time1[T1]<200)
+                    if(time1[T1]>200)
                     {
                         blacksq++;
                     }
@@ -92,7 +92,7 @@ task main()
                 if(SensorValue(S3)<45)
                 {
                     sense=1;
-                    if(time1[T1]<200)
+                    if(time1[T1]>200)
                     {
                         blacksq++;
                     }
