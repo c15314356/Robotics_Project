@@ -3,8 +3,10 @@ This will Be the Main Program for the project
 TODO------------------------------------
 implement ability to write to file
 implement go back sq when double line hit and turn
-implement x and y coords in order to go back to start
+implement x and y coords in order to go back to start2
 implement ability to scan for an object
+try running program with motor sync time on turns to see if it helps at all
+check forward distance
 -------------------------------------------
 c15314356
 */
@@ -14,7 +16,7 @@ c15314356
 #pragma config(Motor,  motorB,          Right,         tmotorEV3_Large, PIDControl, driveRight, encoder)
 #pragma config(Motor,  motorC,          Left,          tmotorEV3_Large, PIDControl, driveLeft, encoder)
 
-#define TURN2 1760
+#define TURN2 1770
 #define TURN 178
 #define SPEED 30
 #define ROW 7
