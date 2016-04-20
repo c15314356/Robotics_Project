@@ -78,7 +78,7 @@ task main()
 	wait1Msec(700);
 	LeftTurn();
 
-    while(end!=6)
+    while(end!=7)
     {
         //traverse right and count lines
         if(direction==1)
@@ -135,7 +135,7 @@ task main()
                 pos2++;
             }
             //Switches to next line
-            if(end!=6)
+            if(end!=7)
             {
                 //Switches to next line
                 direction=NextLineRight(direction);
