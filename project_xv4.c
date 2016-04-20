@@ -14,7 +14,7 @@ c15314356
 #pragma config(Motor,  motorB,          Right,         tmotorEV3_Large, PIDControl, driveRight, encoder)
 #pragma config(Motor,  motorC,          Left,          tmotorEV3_Large, PIDControl, driveLeft, encoder)
 
-#define TURN2 1780
+#define TURN2 1790
 #define TURN 178
 #define SPEED 30
 #define ROW 7
@@ -46,8 +46,30 @@ task main()
     int count=0;
     int direction=1;
     int end=0;
+    int doubleline=0;
+    int pause=0;
 
     //turn right go forward until hit double line go back half a square then turn left (You are at bottom left sq now
+    RightTurn();
+    while(pause==0)
+    {
+    	  motor(motorB)=SPEED;
+    		motor(motorC)=SPEED;
+
+    		if(SensorValue(S1)<45&&doubleline==1)
+    		{
+    			if(time1[T1]<200)
+    			{
+    				pause=1;
+    			}
+    		}
+    		if(SensorValue(S1)<45&&doubleline==0)
+    		{
+    			doubleline=1;
+    			clearTimer(T1);
+    		}
+    }
+
     while(end!=6)
     {
         //traverse right and count lines
@@ -141,7 +163,7 @@ void Forward(void)
 {
     motor(motorB)=SPEED;
     motor(motorC)=SPEED;
-    wait1Msec(900);
+    wait1Msec(1000);
 }//end Forward()
 
 //resets the number of count
@@ -194,7 +216,9 @@ int NextLineRight(int direction)
     total++;
     ForwardSQ();
     RightTurn();
-    ForwardSQ();
+		motor[motorB]=20;
+		motor[motorC]=20;
+		wait1Msec(2200);
     RightTurn();
     direction=1;
     return(direction);
