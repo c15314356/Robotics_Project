@@ -14,7 +14,7 @@ c15314356
 #pragma config(Motor,  motorB,          Right,         tmotorEV3_Large, PIDControl, driveRight, encoder)
 #pragma config(Motor,  motorC,          Left,          tmotorEV3_Large, PIDControl, driveLeft, encoder)
 
-#define TURN2 1790
+#define TURN2 1760
 #define TURN 178
 #define SPEED 30
 #define ROW 7
@@ -52,23 +52,29 @@ task main()
     //turn right go forward until hit double line go back half a square then turn left (You are at bottom left sq now
     RightTurn();
     while(pause==0)
-    {
-    	  motor(motorB)=SPEED;
-    		motor(motorC)=SPEED;
+  	{
+  	  motor(motorB)=SPEED;
+  		motor(motorC)=SPEED;
+  		wait1Msec(1);
 
-    		if(SensorValue(S1)<45&&doubleline==1)
-    		{
-    			if(time1[T1]<200)
-    			{
-    				pause=1;
-    			}
-    		}
-    		if(SensorValue(S1)<45&&doubleline==0)
-    		{
-    			doubleline=1;
-    			clearTimer(T1);
-    		}
-    }
+  		if(SensorValue(S3)<45&&doubleline!=1)
+  		{
+  			if(time1[T1]<200)
+  			{
+  				pause=1;
+  			}
+  			doubleline=1;
+  	}
+  		if(SensorValue(S3)>45&&doubleline==1)
+  		{
+  			doubleline=0;
+  			clearTimer(T1);
+  		}
+	}
+	motor[motorB]=-20;
+	motor[motorC]=-20;
+	wait1Msec(700);
+	LeftTurn();
 
     while(end!=6)
     {
@@ -110,7 +116,7 @@ task main()
             end++;
             while(count<8)
             {
-                if(SensorValue(S1)<45)
+                if(SensorValue(S3)<45)
                 {
                     blacksq++;
                     //store position to array
@@ -207,7 +213,7 @@ int NextLineLeft(int direction)
 //Move next line on right
 int NextLineRight(int direction)
 {
-    if(SensorValue(S1)<45)
+    if(SensorValue(S3)<45)
     {
         blacksq++;
         //store position to array
