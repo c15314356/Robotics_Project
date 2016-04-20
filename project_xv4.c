@@ -53,7 +53,7 @@ task main()
         if(direction==1)
         {
             end++;
-            while(count<8)
+            while(count<7)
             {
                 if(SensorValue(S3)<45)
                 {
@@ -64,7 +64,9 @@ task main()
                 //increment counters
                 count++;
                 total++;
-                displayBigTextLine(4,"Count:%d Black:%d Total:%d",count,blacksq,total);
+                displayBigTextLine(2,"Black:%d",blacksq);
+                displayBigTextLine(5,"Count:%d ",count);
+                displayBigTextLine(8,"Total:%d",total);
                 //move forward one square
                 Forward();
                 pos2++;
@@ -83,7 +85,7 @@ task main()
         if(direction==2)
         {
             end++;
-            while(count<8)
+            while(count<7)
             {
                 if(SensorValue(S1)<45)
                 {
@@ -94,7 +96,9 @@ task main()
                 //increment counters
                 count++;
                 total++;
-                displayBigTextLine(4,"Count:%d Black:%d Total:%d",count,blacksq,total);
+                displayBigTextLine(2,"Black:%d",blacksq);
+                displayBigTextLine(5,"Count:%d ",count);
+                displayBigTextLine(8,"Total:%d",total);
                 //move forward one square
                 Forward();
                 pos2++;
@@ -118,29 +122,33 @@ task main()
 //Turn left 90 degrees
 void LeftTurn(void)
 {
-    //Reset Encoder
-    nMotorEncoder[motorB]=0;
-	nMotorEncoder[motorC]=0;
-    //Turn Right
-	setMotorTarget(motorB,-TURN,50);
-	setMotorTarget(motorC,TURN,50);
-    //Wait for program to stop
-	waitUntilMotorStop(motorB);
-	waitUntilMotorStop(motorC);
+	motor[motorB]=-10;
+	motor[motorC]=10;
+	wait1Msec(1600);
+
+	motor[motorB]=20;
+	motor[motorC]=20;
+	wait1Msec(900);
+
+	motor[motorB]=-10;
+	motor[motorC]=10;
+	wait1Msec(1530);
 }//end LeftTurn
 
 //Turn right 90 degrees
 void RightTurn(void)
 {
-    //Reset Encoder
-    nMotorEncoder[motorB]=0;
-	nMotorEncoder[motorC]=0;
-    //Turn Right
-    setMotorTarget(motorB,TURN,50);
-	setMotorTarget(motorC,-TURN,50);
-    //Wait for program to stop
-    waitUntilMotorStop(motorB);
-    waitUntilMotorStop(motorC);
+	motor[motorB]=10;
+	motor[motorC]=-10;
+	wait1Msec(1600);
+
+	motor[motorB]=20;
+	motor[motorC]=20;
+	wait1Msec(2100);
+
+	motor[motorB]=10;
+	motor[motorC]=-10;
+	wait1Msec(1530);
 }//end RightTurn
 
 //Go Forward
@@ -164,8 +172,8 @@ void ForwardSQ(void)//<--------------------------------------------------change 
 	//Move Forward a Square
 	nMotorEncoder[motorB]=0;
 	nMotorEncoder[motorC]=0;
-	setMotorTarget(motorB,180,50);
-	setMotorTarget(motorC,180,50);
+	setMotorTarget(motorB,180,20);
+	setMotorTarget(motorC,180,20);
 	waitUntilMotorStop(motorB);
 	waitUntilMotorStop(motorC);
 }//end ForwardSQ()
