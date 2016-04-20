@@ -14,6 +14,7 @@ c15314356
 #pragma config(Motor,  motorB,          Right,         tmotorEV3_Large, PIDControl, driveRight, encoder)
 #pragma config(Motor,  motorC,          Left,          tmotorEV3_Large, PIDControl, driveLeft, encoder)
 
+#define TURN2 1780
 #define TURN 178
 #define SPEED 30
 #define ROW 7
@@ -53,7 +54,7 @@ task main()
         if(direction==1)
         {
             end++;
-            while(count<7)
+            while(count<8)
             {
                 if(SensorValue(S3)<45)
                 {
@@ -85,7 +86,7 @@ task main()
         if(direction==2)
         {
             end++;
-            while(count<7)
+            while(count<8)
             {
                 if(SensorValue(S1)<45)
                 {
@@ -124,15 +125,7 @@ void LeftTurn(void)
 {
 	motor[motorB]=-10;
 	motor[motorC]=10;
-	wait1Msec(1600);
-
-	motor[motorB]=20;
-	motor[motorC]=20;
-	wait1Msec(900);
-
-	motor[motorB]=-10;
-	motor[motorC]=10;
-	wait1Msec(1530);
+	wait1Msec(TURN2);
 }//end LeftTurn
 
 //Turn right 90 degrees
@@ -140,15 +133,7 @@ void RightTurn(void)
 {
 	motor[motorB]=10;
 	motor[motorC]=-10;
-	wait1Msec(1600);
-
-	motor[motorB]=20;
-	motor[motorC]=20;
-	wait1Msec(2100);
-
-	motor[motorB]=10;
-	motor[motorC]=-10;
-	wait1Msec(1530);
+	wait1Msec(TURN2);
 }//end RightTurn
 
 //Go Forward
@@ -156,7 +141,7 @@ void Forward(void)
 {
     motor(motorB)=SPEED;
     motor(motorC)=SPEED;
-    wait1Msec(1100);
+    wait1Msec(900);
 }//end Forward()
 
 //resets the number of count
@@ -172,8 +157,8 @@ void ForwardSQ(void)//<--------------------------------------------------change 
 	//Move Forward a Square
 	nMotorEncoder[motorB]=0;
 	nMotorEncoder[motorC]=0;
-	setMotorTarget(motorB,180,20);
-	setMotorTarget(motorC,180,20);
+	setMotorTarget(motorB,220,20);
+	setMotorTarget(motorC,220,20);
 	waitUntilMotorStop(motorB);
 	waitUntilMotorStop(motorC);
 }//end ForwardSQ()
