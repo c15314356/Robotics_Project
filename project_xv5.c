@@ -2,11 +2,7 @@
 This will Be the Main Program for the project
 TODO------------------------------------
 implement ability to write to file
-implement go back sq when double line hit and turn
-implement x and y coords in order to go back to start2
-implement ability to scan for an object
 try running program with motor sync time on turns to see if it helps at all
-check forward distance
 -------------------------------------------
 c15314356
 */
@@ -26,7 +22,7 @@ c15314356
 int blacksq=0;
 int total=0;
 int pos1=0,pos2=0;
-int grid[ROW][COL];//<--------------------- change all to strings and also change all intial values to 0
+int grid[ROW][COL];//<--------------------- change all intial values to 0
 
 //Turn left 90 degrees
 void LeftTurn(void);
@@ -42,6 +38,8 @@ void ForwardSQ(void);
 int NextLineLeft(int direction);
 //Move next line on right
 int NextLineRight(int direction);
+//Go to Start of grid
+void GoStart(void);
 
 task main()
 {
@@ -55,7 +53,7 @@ task main()
     RightTurn();
     while(pause==0)
   	{
-  	  motor(motorB)=SPEED;
+        motor(motorB)=SPEED;
   		motor(motorC)=SPEED;
   		wait1Msec(1);
 
@@ -77,7 +75,8 @@ task main()
 	motor[motorC]=-20;
 	wait1Msec(700);
 	LeftTurn();
-
+    
+    //start traversing grid
     while(end!=7)
     {
         //traverse right and count lines
@@ -104,12 +103,11 @@ task main()
             }
 
             //Switches to next line
-            if(end!=6)
+            if(end!=7)
             {
                 direction=NextLineLeft(direction);
                 //Resets count
                 count=ResetCount(count);
-                pos2=0;
                 pos1++;
             }
         }
@@ -132,7 +130,7 @@ task main()
                 displayBigTextLine(8,"Total:%d",total);
                 //move forward one square
                 Forward();
-                pos2++;
+                pos2--;
             }
             //Switches to next line
             if(end!=7)
@@ -140,13 +138,80 @@ task main()
                 //Switches to next line
                 direction=NextLineRight(direction);
                 //Resets count
-                count=ResetCount(count);
-                pos2=0;
+                count=ResetCount(count);;
                 pos1++;
             }
         }//end if()
-        //go back 7 suares and take away distance from bottom col from start from 7 and go to start
     }//end while()
+    
+    //Goes back to the start function
+    GoStart();
+    
+    //THIS IS THE SECOND PART OF THE PROGRAM TO MAP THE LOCATION OF THE OBJECT
+    if(getTouchValue(S2)==1)
+    {   
+        //reset all values
+        pos1=0;
+        pos2=0;
+        count=0;
+        direction=1;
+        end=0;
+        while(end!=7)
+        {
+            //traverse right and count lines
+            if(direction==1)
+            {
+                end++;
+                while(count<8)
+                {
+                    //check to see if there is an object 140mm away
+                    if(getUSDistance(distanceCM)<14)
+                    {
+                        grid[pos1][pos2]=2;
+                    }
+                    //increment counters
+                    count++;
+                    Forward();
+                    pos2++;
+                }
+    
+                //Switches to next line
+                if(end!=7)
+                {
+                    direction=NextLineLeft(direction);
+                    //Resets count
+                    count=ResetCount(count);
+                    pos1++;
+                }
+            }
+            if(direction==2)
+            {
+                //check to see if there is an object 140mm away
+                end++;
+                while(count<8)
+                {
+                    if(getUSDistance(distanceCM)<14)
+                    {
+                        grid[pos1][pos2]=2;
+                    }
+                    //increment counters
+                    count++;
+                    //move forward one square
+                    Forward();
+                    pos2--;
+                }
+                //Switches to next line
+                if(end!=7)
+                {
+                    //Switches to next line
+                    direction=NextLineRight(direction);
+                    //Resets count
+                    count=ResetCount(count);
+                    pos1++;
+                }
+            }//end if()
+        }//end while()
+    }
 }//end main()
 
 
@@ -224,10 +289,37 @@ int NextLineRight(int direction)
     total++;
     ForwardSQ();
     RightTurn();
-		motor[motorB]=20;
-		motor[motorC]=20;
-		wait1Msec(2200);
+    motor[motorB]=20;
+    motor[motorC]=20;
+    wait1Msec(2200);
     RightTurn();
     direction=1;
     return(direction);
 }//end NextLineRight ()
+
+//Go to the start
+void GoStart(void)
+{
+    int count=0;
+    //turn left twice
+    LeftTurn();
+    LeftTurn();
+    //go back 8 squares
+    while(count<8)
+    {
+        //increment counters
+        count++;
+        Forward();
+    }
+    //reset current count back to zero
+    count=ResetCount(count);
+    //turn left
+    LeftTurn();
+    //go forward 3 squares you are at start
+    while(count<3)
+    {
+        //increment counters
+        count++;
+        Forward();
+    }
+}
