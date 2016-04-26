@@ -75,7 +75,7 @@ task main()
 	motor[motorC]=-20;
 	wait1Msec(700);
 	LeftTurn();
-    
+
     //start traversing grid
     while(end!=7)
     {
@@ -138,18 +138,18 @@ task main()
                 //Switches to next line
                 direction=NextLineRight(direction);
                 //Resets count
-                count=ResetCount(count);;
+                count=ResetCount(count);
                 pos1++;
             }
         }//end if()
     }//end while()
-    
+
     //Goes back to the start function
     GoStart();
-    
+
     //THIS IS THE SECOND PART OF THE PROGRAM TO MAP THE LOCATION OF THE OBJECT
     if(getTouchValue(S2)==1)
-    {   
+    {
         //reset all values
         pos1=0;
         pos2=0;
@@ -165,7 +165,7 @@ task main()
                 while(count<8)
                 {
                     //check to see if there is an object 140mm away
-                    if(getUSDistance(distanceCM)<14)
+                    if(getUSDistance(S1)<14)
                     {
                         grid[pos1][pos2]=2;
                     }
@@ -174,7 +174,7 @@ task main()
                     Forward();
                     pos2++;
                 }
-    
+
                 //Switches to next line
                 if(end!=7)
                 {
@@ -190,7 +190,7 @@ task main()
                 end++;
                 while(count<8)
                 {
-                    if(getUSDistance(distanceCM)<14)
+                    if(getUSDistance(S1)<14)
                     {
                         grid[pos1][pos2]=2;
                     }
