@@ -13,7 +13,7 @@ c15314356
 #pragma config(Motor,  motorC,          Left,          tmotorEV3_Large, PIDControl, driveLeft, encoder)
 
 #define TURN2 1770
-#define TURN 178
+#define TURN 168
 #define SPEED 30
 #define ROW 7
 #define COL 9
@@ -53,7 +53,7 @@ task main()
     RightTurn();
     while(pause==0)
   	{
-        motor(motorB)=SPEED;
+      motor(motorB)=SPEED;
   		motor(motorC)=SPEED;
   		wait1Msec(1);
 
@@ -148,70 +148,79 @@ task main()
     GoStart();
 
     //THIS IS THE SECOND PART OF THE PROGRAM TO MAP THE LOCATION OF THE OBJECT
-    if(getTouchValue(S2)==1)
+    while(1==1)
     {
-        //reset all values
-        pos1=0;
-        pos2=0;
-        count=0;
-        direction=1;
-        end=0;
-        while(end!=7)
-        {
-            //traverse right and count lines
-            if(direction==1)
+    	if(getTouchValue(S2)==1)
+    	{
+            //reset all values
+            pos1=0;
+            pos2=0;
+            count=0;
+            direction=1;
+            end=0;
+            while(end!=7)
             {
-                end++;
-                while(count<8)
+                //traverse right and count lines
+                if(direction==1)
+                {
+                    end++;
+                    while(count<8)
+                    {
+                        //check to see if there is an object 140mm away
+                        if(getUSDistance(S1)<14)
+                        {
+                            grid[pos1][pos2]=2;
+                             	motor[motorB]=0;
+															motor[motorC]=0;
+                            wait1Msec(1000000);
+                        }
+                        //increment counters
+                        count++;
+                        Forward();
+                        pos2++;
+                    }
+
+                    //Switches to next line
+                    if(end!=7)
+                    {
+                        direction=NextLineLeft(direction);
+                        //Resets count
+                        count=ResetCount(count);
+                        pos1++;
+                    }
+                }
+                if(direction==2)
                 {
                     //check to see if there is an object 140mm away
-                    if(getUSDistance(S1)<14)
+                    end++;
+                    while(count<8)
                     {
-                        grid[pos1][pos2]=2;
+                        if(getUSDistance(S1)<14)
+                        {
+                            grid[pos1][pos2]=2;
+                            	motor[motorB]=0;
+															motor[motorC]=0;
+                            wait1Msec(1000000);
+                        }
+                        //increment counters
+                        count++;
+                        //move forward one square
+                        Forward();
+                        pos2--;
                     }
-                    //increment counters
-                    count++;
-                    Forward();
-                    pos2++;
-                }
-
-                //Switches to next line
-                if(end!=7)
-                {
-                    direction=NextLineLeft(direction);
-                    //Resets count
-                    count=ResetCount(count);
-                    pos1++;
-                }
-            }
-            if(direction==2)
-            {
-                //check to see if there is an object 140mm away
-                end++;
-                while(count<8)
-                {
-                    if(getUSDistance(S1)<14)
-                    {
-                        grid[pos1][pos2]=2;
-                    }
-                    //increment counters
-                    count++;
-                    //move forward one square
-                    Forward();
-                    pos2--;
-                }
-                //Switches to next line
-                if(end!=7)
-                {
                     //Switches to next line
-                    direction=NextLineRight(direction);
-                    //Resets count
-                    count=ResetCount(count);
-                    pos1++;
-                }
-            }//end if()
-        }//end while()
-    }
+                    if(end!=7)
+                    {
+                        //Switches to next line
+                        direction=NextLineRight(direction);
+                        //Resets count
+                        count=ResetCount(count);
+                        pos1++;
+                    }
+                }//end if()
+            }//end while()
+
+      }  }//end if()
 }//end main()
 
 
