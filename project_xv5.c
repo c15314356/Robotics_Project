@@ -321,14 +321,17 @@ void GoStart(void)
         Forward();
     }
     //reset current count back to zero
-    count=ResetCount(count);
+    count=0;
     //turn left
     LeftTurn();
     //go forward 3 squares you are at start
-    while(count<3)
+    while(count<2)
     {
         //increment counters
         count++;
         Forward();
     }
+     	motor[motorB]=0;
+			motor[motorC]=0;
+      wait1Msec(1000);
 }
