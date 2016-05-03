@@ -22,6 +22,7 @@ c15314356
 int blacksq=0;
 int total=0;
 int pos1=0,pos2=0;
+//intailsed array 
 char grid[ROW][COL]=
 {
 {'0','0','0','0','0','0','0'},
@@ -54,7 +55,7 @@ int NextLineLeft(int direction);
 int NextLineRight(int direction);
 //Go to Start of grid
 void GoStart(void);
-//display array
+//display array and write to it
 void checkarray(void);
 
 task main()
@@ -67,7 +68,7 @@ task main()
 
     //open the file to write
     fileHandle=fileOpenWrite(filename);
-    //turn right go forward until hit double line go back half a square then turn left (You are at bottom left sq now
+    //turn right go forward until hit double line go back half a square then turn left You are at bottom left sq now
     RightTurn();
     while(pause==0)
   	{
