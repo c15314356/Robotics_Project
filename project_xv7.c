@@ -1,10 +1,7 @@
 /*
 This will Be the Main Program for the project
 TODO------------------------------------
-fix object write to file for second file
-fix start
-fix read in file and use to check if on black or white whne found object
-
+implement write start
 -------------------------------------------
 c15314356
 */
@@ -15,10 +12,11 @@ c15314356
 #pragma config(Motor,  motorC,          Left,          tmotorEV3_Large, PIDControl, driveLeft, encoder)
 
 #define TURN2 1770
-#define TURN 168
+#define TURN 150
 #define SPEED 30
 #define ROW 7
 #define COL 9
+#define STARTNUM 6;
 
 //global variables
 int blacksq=0;
@@ -27,6 +25,8 @@ int pos1=0,pos2=0;
 string onwhite="Your are on White";
 string onblack="Your are on Black";
 int colour=0;
+int temp;
+int startpos=0;
 char grid[ROW][COL]=
 {
 {'0','0','0','0','0','0','0'},
@@ -73,7 +73,7 @@ task main()
     int doubleline=0;
     int pause=0;
     string line1='\n';
-	int line2=strlen(line1);
+		int line2=strlen(line1);
     int sizeofblack=strlen(onblack);
     int sizeofwhite=strlen(onwhite);
 
@@ -84,9 +84,10 @@ task main()
     RightTurn();
     while(pause==0)
   	{
-        motor(motorB)=SPEED;
+      motor(motorB)=SPEED;
   		motor(motorC)=SPEED;
   		wait1Msec(1);
+  		startpos++;
 
   		if(SensorValue(S3)<45&&doubleline!=1)
   		{
@@ -102,6 +103,8 @@ task main()
   			clearTimer(T1);
   		}
 	}
+	//writes start pos to array
+	startpos=(startpos/1000)+1;
 	motor[motorB]=-20;
 	motor[motorC]=-20;
 	wait1Msec(700);
@@ -126,7 +129,8 @@ task main()
                 count++;
                 total++;
                 displayBigTextLine(2,"Black:%d",blacksq);
-                displayBigTextLine(5,"Count:%d ",count);
+                displayBigTextLine(5,"startpos=%d",startpos);
+                //displayBigTextLine(5,"Count:%d ",count;
                 displayBigTextLine(8,"Total:%d",total);
                 //move forward one square
                 Forward();
@@ -174,11 +178,47 @@ task main()
             }
         }//end if()
     }//end while()
+
+    //write first file
 		checkarray();
     //Goes back to the start function
     GoStart();
 
     //THIS IS THE SECOND PART OF THE PROGRAM TO MAP THE LOCATION OF THE OBJECT
+    //turn right go forward until hit double line go back half a square then turn left (You are at bottom left sq now)
+    doubleline=0;
+    pause=0;
+
+    while(pause==0)
+  	{
+      motor(motorB)=SPEED;
+  		motor(motorC)=SPEED;
+  		wait1Msec(1);
+
+  		if(SensorValue(S3)<45&&doubleline!=1)
+  		{
+  			if(time1[T1]<200)
+  			{
+  				pause=1;
+  			}
+  			doubleline=1;
+  	}
+  		if(SensorValue(S3)>45&&doubleline==1)
+  		{
+  			doubleline=0;
+  			clearTimer(T1);
+  		}
+	}
+	motor[motorB]=-20;
+	motor[motorC]=-20;
+	wait1Msec(700);
+	LeftTurn();
+
+	motor[motorB]=0;
+	motor[motorC]=0;
+  wait1Msec(1000);
+
+	//start traversing through grid looking for object
     while(1==1)
     {
     	if(getTouchValue(S2)==1)
@@ -197,29 +237,32 @@ task main()
                     end++;
                     while(count<8)
                     {
-                        //check to see if there is an object 140mm away
-                        if(getUSDistance(S1)<14)
+                        //check to see if there is an object
+                        if(getUSDistance(S1)<20)
                         {
+                        	//if on black
                             if(grid[pos1][pos2]=='1')
                             {
                                 colour=1;
                             }
-                            if(grid[pos1][pos2]=='0');
+                            //if on white
+                            if(grid[pos1][pos2]=='0')
                             {
                                 colour=0;
                             }
-                            
+														//change to j for object
                             grid[pos1][pos2]='J';
                             //write to file2
-                            for(int h=0;h<7;h++)
+                            for(int h=6;h>-1;h--)
                             {
                                 for(int j=0;j<9;j++)
                                 {
                                     fileWriteChar(fileHandle2,grid[h][j]);
                                 }
+                                //new line
                                 fileWriteData(fileHandle2,line1,line2);
                             }
-                            
+														//write either on black or white
                             if(colour==1)
                             {
                               fileWriteData(fileHandle2,onblack,sizeofblack);
@@ -229,7 +272,7 @@ task main()
                               fileWriteData(fileHandle2,onwhite,sizeofwhite);
                             }
                             fileClose(fileHandle2);
-                            
+
                             motor[motorB]=0;
                             motor[motorC]=0;
                             wait1Msec(1000000);
@@ -251,23 +294,23 @@ task main()
                 }
                 if(direction==2)
                 {
-                    //check to see if there is an object 140mm away
+                    //check to see if there is an object
                     end++;
                     while(count<8)
                     {
-                        if(getUSDistance(S1)<14)
+                        if(getUSDistance(S1)<20)
                         {
-                            if(grid[pos][pos2]='1')
+                            if(grid[pos1][pos2]=='1')
                             {
                                 colour=1;
                             }
-                            if(grid[pos][pos2]='0')
+                            if(grid[pos1][pos2]=='0')
                             {
                                 colour=0;
                             }
                             grid[pos1][pos2]='J';
-                            //write to file
-                            for(int h=0;h<7;h++)
+                            //write to file 2
+                            for(int h=6;h>-1;h--)
                             {
                                 for(int j=0;j<9;j++)
                                 {
@@ -275,11 +318,12 @@ task main()
                                 }
                                 fileWriteData(fileHandle2,line1,line2);
                             }
+                            //write black or white depending on sq it is on
                             if(colour==1)
                             {
                               fileWriteData(fileHandle2,onblack,sizeofblack);
                             }
-                            
+
                             if(colour==0)
                             {
                               fileWriteData(fileHandle2,onwhite,sizeofwhite);
@@ -287,7 +331,7 @@ task main()
                             fileClose(fileHandle2);
                             motor[motorB]=0;
                             motor[motorC]=0;
-                            
+
                             wait1Msec(1000000);
                         }
                         //increment counters
@@ -344,7 +388,7 @@ int ResetCount(int count)
 }//end ResetCount()
 
 //Move Forward a Square
-void ForwardSQ(void)//<--------------------------------------------------change distance forward
+void ForwardSQ(void)
 {
 	//Move Forward a Square
 	nMotorEncoder[motorB]=0;
@@ -413,7 +457,8 @@ void GoStart(void)
     //turn left
     LeftTurn();
     //go forward 3 squares you are at start
-    while(count<2)
+    temp=7-startpos;
+    while(count<temp)
     {
         //increment counters
         count++;
@@ -442,7 +487,9 @@ void checkarray(void)
 	wait1Msec(1000);
 
 	//write to file
-	for(int h=0;h<7;h++)
+	grid[startpos-1][0]='S';
+
+	for(int h=6;h>-1;h--)
 	{
 		for(int j=0;j<9;j++)
 		{
