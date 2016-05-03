@@ -3,10 +3,9 @@ This will Be the Main Program for the project
 This program runs the entire grid, counts the total amount of squares, writes the colour and position of squares to a file,
 which will have a correctly labeled start position, a object position and a second file which tells you if the object is on white or black which also displayes
 the grid.
-
 T1-07
-C15314356
-
+By C15314356 D. Savickas and C15729771 K. Walsh
+04/05/16
 
 */
 #pragma config(Sensor, S3,     lightSensor,    sensorEV3_Color)
