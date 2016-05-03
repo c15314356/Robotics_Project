@@ -1,8 +1,10 @@
 /*
 This will Be the Main Program for the project
 TODO------------------------------------
-implement ability to write to file
-try running program with motor sync time on turns to see if it helps at all
+fix object write to file for second file
+fix start
+fix read in file and use to check if on black or white whne found object
+
 -------------------------------------------
 c15314356
 */
@@ -22,6 +24,9 @@ c15314356
 int blacksq=0;
 int total=0;
 int pos1=0,pos2=0;
+string onwhite="Your are on White";
+string onblack="Your are on Black";
+int colour=0;
 char grid[ROW][COL]=
 {
 {'0','0','0','0','0','0','0'},
@@ -36,6 +41,9 @@ char grid[ROW][COL]=
 //file handle
 long fileHandle;
 string filename="MappedGrid";
+
+long fileHandle2;
+string filename2="MappedGrid2";
 
 
 //Turn left 90 degrees
@@ -64,14 +72,19 @@ task main()
     int end=0;
     int doubleline=0;
     int pause=0;
+    string line1='\n';
+	int line2=strlen(line1);
+    int sizeofblack=strlen(onblack);
+    int sizeofwhite=strlen(onwhite);
 
     //open the file to write
     fileHandle=fileOpenWrite(filename);
-    //turn right go forward until hit double line go back half a square then turn left (You are at bottom left sq now
+    fileHandle2=fileOpenWrite(filename2);
+    //turn right go forward until hit double line go back half a square then turn left (You are at bottom left sq now)
     RightTurn();
     while(pause==0)
   	{
-      motor(motorB)=SPEED;
+        motor(motorB)=SPEED;
   		motor(motorC)=SPEED;
   		wait1Msec(1);
 
@@ -187,9 +200,38 @@ task main()
                         //check to see if there is an object 140mm away
                         if(getUSDistance(S1)<14)
                         {
+                            if(grid[pos1][pos2]=='1')
+                            {
+                                colour=1;
+                            }
+                            if(grid[pos1][pos2]=='0');
+                            {
+                                colour=0;
+                            }
+                            
                             grid[pos1][pos2]='J';
-                             	motor[motorB]=0;
-															motor[motorC]=0;
+                            //write to file2
+                            for(int h=0;h<7;h++)
+                            {
+                                for(int j=0;j<9;j++)
+                                {
+                                    fileWriteChar(fileHandle2,grid[h][j]);
+                                }
+                                fileWriteData(fileHandle2,line1,line2);
+                            }
+                            
+                            if(colour==1)
+                            {
+                              fileWriteData(fileHandle2,onblack,sizeofblack);
+                            }
+                            if(colour==0)
+                            {
+                              fileWriteData(fileHandle2,onwhite,sizeofwhite);
+                            }
+                            fileClose(fileHandle2);
+                            
+                            motor[motorB]=0;
+                            motor[motorC]=0;
                             wait1Msec(1000000);
                         }
                         //increment counters
@@ -215,9 +257,37 @@ task main()
                     {
                         if(getUSDistance(S1)<14)
                         {
+                            if(grid[pos][pos2]='1')
+                            {
+                                colour=1;
+                            }
+                            if(grid[pos][pos2]='0')
+                            {
+                                colour=0;
+                            }
                             grid[pos1][pos2]='J';
-                            	motor[motorB]=0;
-															motor[motorC]=0;
+                            //write to file
+                            for(int h=0;h<7;h++)
+                            {
+                                for(int j=0;j<9;j++)
+                                {
+                                    fileWriteChar(fileHandle2,grid[h][j]);
+                                }
+                                fileWriteData(fileHandle2,line1,line2);
+                            }
+                            if(colour==1)
+                            {
+                              fileWriteData(fileHandle2,onblack,sizeofblack);
+                            }
+                            
+                            if(colour==0)
+                            {
+                              fileWriteData(fileHandle2,onwhite,sizeofwhite);
+                            }
+                            fileClose(fileHandle2);
+                            motor[motorB]=0;
+                            motor[motorC]=0;
+                            
                             wait1Msec(1000000);
                         }
                         //increment counters
@@ -376,7 +446,7 @@ void checkarray(void)
 	{
 		for(int j=0;j<9;j++)
 		{
-				fileWriteChar(fileHandle,grid[h][j]);
+            fileWriteChar(fileHandle,grid[h][j]);
 		}
 		fileWriteData(fileHandle,line1,line2);
 	}
