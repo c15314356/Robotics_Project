@@ -1,9 +1,13 @@
 /*
 This will Be the Main Program for the project
-TODO------------------------------------
-implement write start
--------------------------------------------
-c15314356
+This program runs the entire grid, counts the total amount of squares, writes the colour and position of squares to a file,
+which will have a correctly labeled start position, a object position and a second file which tells you if the object is on white or black which also displayes
+the grid.
+
+T1-07
+C15314356
+
+
 */
 #pragma config(Sensor, S3,     lightSensor,    sensorEV3_Color)
 #pragma config(Sensor, S2,     touchSensor,    sensorEV3_Touch)
@@ -73,7 +77,7 @@ task main()
     int doubleline=0;
     int pause=0;
     string line1='\n';
-		int line2=strlen(line1);
+    int line2=strlen(line1);
     int sizeofblack=strlen(onblack);
     int sizeofwhite=strlen(onwhite);
 
@@ -129,8 +133,6 @@ task main()
                 count++;
                 total++;
                 displayBigTextLine(2,"Black:%d",blacksq);
-                displayBigTextLine(5,"startpos=%d",startpos);
-                //displayBigTextLine(5,"Count:%d ",count;
                 displayBigTextLine(8,"Total:%d",total);
                 //move forward one square
                 Forward();
@@ -161,8 +163,7 @@ task main()
                 count++;
                 total++;
                 displayBigTextLine(2,"Black:%d",blacksq);
-                displayBigTextLine(5,"Count:%d ",count);
-                displayBigTextLine(8,"Total:%d",total);
+                displayBigTextLine(5,"Total:%d",total);
                 //move forward one square
                 Forward();
                 pos2--;
@@ -250,7 +251,7 @@ task main()
                             {
                                 colour=0;
                             }
-														//change to j for object
+                            //change to j for object
                             grid[pos1][pos2]='J';
                             //write to file2
                             for(int h=6;h>-1;h--)
@@ -262,7 +263,7 @@ task main()
                                 //new line
                                 fileWriteData(fileHandle2,line1,line2);
                             }
-														//write either on black or white
+                            //write either on black or white
                             if(colour==1)
                             {
                               fileWriteData(fileHandle2,onblack,sizeofblack);
